@@ -4,9 +4,13 @@
   "description": "Repo for collect ceo core",
   "main": "index.js",
   "scripts": {
-    "start": "cd client && npm run dev",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "concurrently \"npm run client:start\" \"npm run server:start\"",
+    "client:start": "cd client && npm run dev",
+    "server:start": "cd server && npm run start"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
 }
