@@ -1,10 +1,13 @@
+import { Flex } from "antd";
+
+import { UploadFiles } from "./components/UploadFiles/UploadFiles";
 import "./App.css";
 
 function App() {
   return (
-    <>
-      <p>Hello world</p>
-    </>
+    <Flex>
+      <UploadFiles />
+    </Flex>
   );
 }
 
