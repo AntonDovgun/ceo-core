@@ -2,16 +2,23 @@ import { FC } from "react";
 import { Button, Upload, type UploadProps, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import Papa from "papaparse";
+import { useDispatch } from "react-redux";
+
+import { type TopPopularQueryCSVResponse } from "../../api/wordstat/types";
+import { SearchQueryService } from "../../services/SearchQuery/SearchQueryService";
+import { addSearchQuery } from "../../store/wordstat/slice";
 
 type BeforeUploadHandler = UploadProps["beforeUpload"];
 type OnChangeHandler = UploadProps["onChange"];
 
 const UploadFiles: FC = () => {
+  const dispatch = useDispatch();
+
   const beforeUploadHandler: BeforeUploadHandler = async (file) => {
     try {
       const text = await file.text();
 
-      const parsedData = Papa.parse(text);
+      const parsedData = Papa.parse<TopPopularQueryCSVResponse>(text);
 
       if (parsedData.errors.length === 0) {
         message.success(`${file.name} file uploaded successfully`);
@@ -19,7 +26,9 @@ const UploadFiles: FC = () => {
         throw new Error(`Cannot parse ${file.name} file`);
       }
 
-      console.log(parsedData);
+      const searchQuery = SearchQueryService.fromSCVResponse(parsedData.data);
+
+      dispatch(addSearchQuery(searchQuery));
     } catch (error) {
       const errorMessage = (error as Error).message;
 

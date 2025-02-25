@@ -1,13 +1,20 @@
-import { Flex } from "antd";
+import { Layout } from "antd";
+import { Content, Header } from "antd/es/layout/layout";
 
 import { UploadFiles } from "./components/UploadFiles/UploadFiles";
-import "./App.css";
+
+import styles from "./App.module.css";
 
 function App() {
   return (
-    <Flex>
-      <UploadFiles />
-    </Flex>
+    <Layout>
+      <Header className={styles.header}>
+        <UploadFiles />
+      </Header>
+      <Content className={styles.content}>
+        <div>This is content</div>
+      </Content>
+    </Layout>
   );
 }
 
