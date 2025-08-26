@@ -1,7 +1,7 @@
 import { WordstatState } from "./types";
 
 const initialState: WordstatState = {
-    searchQueryCollection: {}
+    searchQueries: {}
 };
 
 export {

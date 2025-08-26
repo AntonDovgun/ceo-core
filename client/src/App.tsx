@@ -4,6 +4,7 @@ import { Content, Header } from "antd/es/layout/layout";
 import { UploadFiles } from "./components/UploadFiles/UploadFiles";
 
 import styles from "./App.module.css";
+import { SearchQueries } from "./components/SearchQueries/SearchQuery";
 
 function App() {
   return (
@@ -12,7 +13,7 @@ function App() {
         <UploadFiles />
       </Header>
       <Content className={styles.content}>
-        <div>This is content</div>
+        <SearchQueries />
       </Content>
     </Layout>
   );

@@ -12,7 +12,7 @@ interface SearchQuery {
 
 
 interface WordstatState {
-     searchQueryCollection: Record<string, SearchQuery>;
+     searchQueries: Record<string, SearchQuery>;
 }
 
 export {

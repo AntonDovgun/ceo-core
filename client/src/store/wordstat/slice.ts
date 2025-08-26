@@ -8,7 +8,7 @@ const wordstatSlice = createSlice({
     initialState,
     reducers: {
         addSearchQuery: (state, { payload }: PayloadAction<SearchQuery>) => {
-            state.searchQueryCollection[payload.id] = payload;
+            state.searchQueries[payload.id] = payload;
         }
     }
 })
