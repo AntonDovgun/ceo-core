@@ -11,7 +11,7 @@ class SearchQueryService {
 
         const queries: Query[] = [];
 
-        for (let i = 1; i < data.length; i++) {
+        for (let i = 1; i < data.length - 1; i++) {
             const [phrase, count] = data[i];
 
             queries.push(QueryService.create(phrase, count));
