@@ -1,13 +1,13 @@
 import { v4 as uuid } from 'uuid';
 
-import { type TopPopularQueriesCSVResponse } from "../../api/wordstat/types";
-import { type Query, type SearchQuery } from "../../store/wordstat/types";
+import { type TopPopularQueriesCSVResponse } from "../../api/queries/types";
+import { type Query, type QueryGroup } from "../../store/queries/types";
 import { QueryService } from '../Query/QueryService';
 
-class SearchQueryService {
-    static fromSCVResponse(data: TopPopularQueriesCSVResponse): SearchQuery {
+class QueryGroupService {
+    static fromSCVResponse(data: TopPopularQueriesCSVResponse): QueryGroup {
         const searchedPhrase = data[0][2].match(/«(.*?)»/);
-        const phrase = searchedPhrase ? searchedPhrase[1] : '';
+        const title = searchedPhrase ? searchedPhrase[1] : '';
 
         const queries: Query[] = [];
 
@@ -18,8 +18,8 @@ class SearchQueryService {
         }
 
         return {
-            id: uuid(),
-            phrase,
+            groupId: uuid(),
+            title,
             queries
         }
 
@@ -27,5 +27,5 @@ class SearchQueryService {
 }
 
 export {
-    SearchQueryService
+    QueryGroupService
 }

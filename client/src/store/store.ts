@@ -1,9 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { wordstatReducer } from "./wordstat/slice";
+
+import { queriesReducer } from "./queries/slice";
 
 const store = configureStore({
     reducer: {
-        wordstat: wordstatReducer
+        queries: queriesReducer
     },
 })
 

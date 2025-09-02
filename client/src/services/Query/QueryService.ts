@@ -1,9 +1,9 @@
 import { v4 as uuid } from "uuid"
 
-import { Query } from "../../store/wordstat/types"
+import { Query } from "../../store/queries/types"
 
 class QueryService {
-    static create(phrase: string, count: string): Query {
+    static create(title: string, count: string): Query {
         let parsedCount = Number(count);
 
         if (isNaN(parsedCount)) {
@@ -12,8 +12,8 @@ class QueryService {
 
 
         return {
-            id: uuid(),
-            phrase,
+            queryId: uuid(),
+            title,
             count: parsedCount
         }
     }

@@ -4,9 +4,9 @@ import { UploadOutlined } from "@ant-design/icons";
 import Papa from "papaparse";
 import { useDispatch } from "react-redux";
 
-import { type TopPopularQueryCSVResponse } from "../../api/wordstat/types";
-import { SearchQueryService } from "../../services/SearchQuery/SearchQueryService";
-import { addSearchQuery } from "../../store/wordstat/slice";
+import { type TopPopularQueryCSVResponse } from "../../api/queries/types";
+import { QueryGroupService } from "../../services/QueryGroup/SearchQueryService";
+import { addQueryGroup } from "../../store/queries/slice";
 
 type BeforeUploadHandler = UploadProps["beforeUpload"];
 type OnChangeHandler = UploadProps["onChange"];
@@ -26,9 +26,9 @@ const UploadFiles: FC = () => {
         throw new Error(`Cannot parse ${file.name} file`);
       }
 
-      const searchQuery = SearchQueryService.fromSCVResponse(parsedData.data);
+      const queryGroup = QueryGroupService.fromSCVResponse(parsedData.data);
 
-      dispatch(addSearchQuery(searchQuery));
+      dispatch(addQueryGroup(queryGroup));
     } catch (error) {
       const errorMessage = (error as Error).message;
 

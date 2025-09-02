@@ -2,7 +2,7 @@ import { Layout } from "antd";
 import { Content, Header } from "antd/es/layout/layout";
 
 import { UploadFiles } from "./components/UploadFiles/UploadFiles";
-import { SearchQueries } from "./components/SearchQueries/SearchQuery";
+import { QueryGroups } from "./components/QueryGroups/QueryGroups";
 
 import styles from "./App.module.css";
 
@@ -13,7 +13,7 @@ function App() {
         <UploadFiles />
       </Header>
       <Content className={styles.content}>
-        <SearchQueries />
+        <QueryGroups />
       </Content>
     </Layout>
   );
