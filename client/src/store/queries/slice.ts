@@ -10,6 +10,16 @@ const queriesSlice = createSlice({
         addQueryGroup: (state, { payload }: PayloadAction<QueryGroup>) => {
             state.queryGroups[payload.groupId] = payload;
         },
+        removeQueryGroup: (state, { payload }: PayloadAction<GroupId>) => {
+            delete state.queryGroups[payload];
+            delete state.filters[payload];
+        },
+        changeQueryGroupTitle: (state, { payload }: PayloadAction<{
+            groupId: GroupId;
+            title: string;
+        }>) => {
+            state.queryGroups[payload.groupId].title = payload.title;
+        },
         setFilters: (state, { payload }: PayloadAction<{
             groupId: GroupId;
             filters: string[];
@@ -21,7 +31,9 @@ const queriesSlice = createSlice({
 
 export const {
     addQueryGroup,
+    removeQueryGroup,
     setFilters,
+    changeQueryGroupTitle,
 } = queriesSlice.actions;
 
 export const queriesReducer = queriesSlice.reducer;

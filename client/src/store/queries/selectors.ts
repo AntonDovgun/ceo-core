@@ -54,8 +54,17 @@ const getFilteredQueries = createSelector(
     },
 );
 
+const getFilteredQueriesCount = createSelector(
+    [
+        (_, groupId: GroupId) => groupId,
+        getFilteredQueries,
+    ],
+    (_, filteredQueries) => filteredQueries.length
+)
+
 export {
     getQueryGroups,
     getGroupFilters,
-    getFilteredQueries
+    getFilteredQueries,
+    getFilteredQueriesCount
 }

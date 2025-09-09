@@ -5,7 +5,7 @@ import Papa from "papaparse";
 import { useDispatch } from "react-redux";
 
 import { type TopPopularQueryCSVResponse } from "../../api/queries/types";
-import { QueryGroupService } from "../../services/QueryGroup/SearchQueryService";
+import { QueryGroupService } from "../../services/QueryGroup/QueryGroupService";
 import { addQueryGroup } from "../../store/queries/slice";
 
 type BeforeUploadHandler = UploadProps["beforeUpload"];
@@ -57,7 +57,7 @@ const UploadFiles: FC = () => {
       accept=".csv"
       showUploadList={false}
     >
-      <Button icon={<UploadOutlined />}>Click to Upload</Button>
+      <Button icon={<UploadOutlined />}>Upload queries</Button>
     </Upload>
   );
 };
