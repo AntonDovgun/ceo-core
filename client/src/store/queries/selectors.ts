@@ -13,7 +13,23 @@ const getQueryGroups = createSelector(
 const getFilters = createSelector(
     getState,
     ({ filters }) => filters
-)
+);
+
+const getSorting = createSelector(
+    getState,
+    ({ sorting }) => sorting
+);
+
+const getSortedGroups = createSelector(
+    getQueryGroups,
+    getSorting,
+    (queryGroups, sorting) => {
+        return sorting.map((groupId) => ({
+            id: groupId,
+            content: queryGroups[groupId].title
+        }))
+    }
+);
 
 const getQueryGroup = createSelector(
     [
@@ -21,7 +37,7 @@ const getQueryGroup = createSelector(
         (_, groupId: GroupId) => groupId,
     ],
     (queryGroups, groupId) => queryGroups[groupId]
-)
+);
 
 const getGroupFilters = createSelector(
     [
@@ -29,7 +45,7 @@ const getGroupFilters = createSelector(
         (_, groupId: GroupId) => groupId,
     ],
     (filters, groupId) => filters[groupId] || [],
-)
+);
 
 const getFilteredQueries = createSelector(
     [
@@ -65,6 +81,8 @@ const getFilteredQueriesCount = createSelector(
 export {
     getQueryGroups,
     getGroupFilters,
+    getSorting,
+    getSortedGroups,
     getFilteredQueries,
     getFilteredQueriesCount
 }

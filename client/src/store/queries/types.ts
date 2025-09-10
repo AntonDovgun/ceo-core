@@ -17,6 +17,7 @@ interface QueryGroup {
 interface QueriesState {
     queryGroups: Record<GroupId, QueryGroup>;
     filters: Record<GroupId, string[]>;
+    sorting: GroupId[];
 }
 
 export {
