@@ -38,8 +38,6 @@ const QueryGroupTable: FC<QueryGroupTable> = ({ groupId }) => {
     getFilteredQueries(state, groupId)
   );
 
-  console.log(filteredQueries.length);
-
   const dataSource = filteredQueries.map(({ title, count, queryId }) => {
     return {
       key: queryId,
