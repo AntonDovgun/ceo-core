@@ -1,0 +1,8 @@
+.deleteIcon {
+    color: gray;
+    transition: all 0.3s;
+
+    &:hover {
+        color: red;
+    }
+}
