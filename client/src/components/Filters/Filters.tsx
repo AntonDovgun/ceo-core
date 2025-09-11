@@ -14,16 +14,16 @@ interface FiltersProps {
 const Filters: FC<FiltersProps> = ({ groupId }) => {
   return (
     <Flex vertical gap={10}>
-      <Flex vertical>
-        <Text>Contains:</Text>
+      <Flex vertical gap={5}>
+        <Text>Символьное совпадение:</Text>
         <TextFilter groupId={groupId} />
       </Flex>
-      <Flex vertical>
-        <Text>Partial:</Text>
+      <Flex vertical gap={5}>
+        <Text>Совпадение по слову:</Text>
         <TextFilter groupId={groupId} isPartial />
       </Flex>
       <Flex align="center" gap={10}>
-        <Text>Count:</Text>
+        <Text>Количество:</Text>
         <CountFilter groupId={groupId} />
       </Flex>
     </Flex>

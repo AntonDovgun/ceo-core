@@ -57,7 +57,7 @@ const UploadFiles: FC = () => {
       accept=".csv"
       showUploadList={false}
     >
-      <Button icon={<UploadOutlined />}>Upload queries</Button>
+      <Button icon={<UploadOutlined />}>Загрузить данные</Button>
     </Upload>
   );
 };
