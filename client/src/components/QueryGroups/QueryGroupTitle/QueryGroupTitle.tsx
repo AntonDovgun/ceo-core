@@ -4,7 +4,10 @@ import { Flex, Modal, Typography } from "antd";
 import { DeleteFilled } from "@ant-design/icons";
 
 import type { GroupId } from "../../../store/queries/types";
-import { getFilteredQueriesCount } from "../../../store/queries/selectors";
+import {
+  getFilteredQueriesCount,
+  getQueriesCount,
+} from "../../../store/queries/selectors";
 import {
   changeQueryGroupTitle,
   removeQueryGroup,
@@ -21,7 +24,10 @@ interface QueryGroupTitle {
 
 const QueryGroupTitle: FC<QueryGroupTitle> = ({ title, groupId }) => {
   const dispatch = useDispatch();
-  const count = useSelector((state) => getFilteredQueriesCount(state, groupId));
+  const queriesCount = useSelector((state) => getQueriesCount(state, groupId));
+  const filteredQueriesCount = useSelector((state) =>
+    getFilteredQueriesCount(state, groupId)
+  );
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -63,7 +69,10 @@ const QueryGroupTitle: FC<QueryGroupTitle> = ({ title, groupId }) => {
           >
             {title}
           </Text>
-          <Text type="secondary">{`- ${count}`}</Text>
+          <Text
+            type="secondary"
+            style={{ fontSize: 12 }}
+          >{`- ${filteredQueriesCount} / ${queriesCount}`}</Text>
         </Flex>
         <Flex>
           <DeleteFilled

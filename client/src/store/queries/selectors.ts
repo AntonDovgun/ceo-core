@@ -33,10 +33,18 @@ const getSortedGroups = createSelector(
 
 const getQueryGroup = createSelector(
     [
-        getQueryGroups,
         (_, groupId: GroupId) => groupId,
+        getQueryGroups,
     ],
-    (queryGroups, groupId) => queryGroups[groupId]
+    (groupId, queryGroups) => queryGroups[groupId]
+);
+
+const getQueriesCount = createSelector(
+    [
+        (_, groupId: GroupId) => groupId,
+        getQueryGroup,
+    ],
+    (_, queryGroup) => queryGroup.queries.length
 );
 
 const getGroupFilters = createSelector(
@@ -44,7 +52,7 @@ const getGroupFilters = createSelector(
         getFilters,
         (_, groupId: GroupId) => groupId,
     ],
-    (filters, groupId) => filters[groupId] || [],
+    (filters, groupId) => filters[groupId],
 );
 
 const getFilteredQueries = createSelector(
@@ -53,22 +61,59 @@ const getFilteredQueries = createSelector(
         getQueryGroup,
         getGroupFilters,
     ],
-    (_, queryGroup, filters) => {
-        const filteredQueries = queryGroup.queries.filter((query) => {
-            for (let i = 0; i <= filters.length - 1; i++) {
-                const tag = filters[i];
+    (_, queryGroup, groupFilters) => {
+        const {
+            contains: containsFilter,
+            partial: partialFilter,
+            count: countFilter
+        } = groupFilters;
 
-                if (query.title.includes(tag)) {
+
+        const filteredQueriesByContains = queryGroup.queries.filter((query) => {
+            for (let i = 0; i <= containsFilter.length - 1; i++) {
+                const text = containsFilter[i];
+
+                if (query.title.includes(text)) {
                     return false;
                 }
             }
 
             return true;
+        });
+
+        const filteredQueriesByPartial = filteredQueriesByContains.filter((query) => {
+            for (let i = 0; i <= partialFilter.length - 1; i++) {
+                const text = partialFilter[i];
+                const queryTitleArray = query.title.split(' ');
+
+                if (queryTitleArray.includes(text)) {
+                    return false;
+                }
+
+            }
+
+            return true;
+        });
+
+        if (!countFilter) {
+            return filteredQueriesByPartial;
+        }
+
+        const filteredQueriesByCount = filteredQueriesByPartial.filter((query) => {
+            const count = Number(query.count);
+
+            if (count >= Number(countFilter)) {
+                return true;
+            }
+
+            return false;
         })
 
-        return filteredQueries
+        return filteredQueriesByCount
     },
 );
+
+
 
 const getFilteredQueriesCount = createSelector(
     [
@@ -84,5 +129,6 @@ export {
     getSorting,
     getSortedGroups,
     getFilteredQueries,
-    getFilteredQueriesCount
+    getFilteredQueriesCount,
+    getQueriesCount
 }
