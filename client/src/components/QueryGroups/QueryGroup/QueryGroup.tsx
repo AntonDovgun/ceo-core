@@ -1,9 +1,9 @@
 import React, { FC } from "react";
+import { useSelector } from "react-redux";
 import { Flex, Table, TableColumnsType } from "antd";
 
 import type { GroupId } from "../../../store/queries/types";
 import { Filters } from "../../Filters/Filters";
-import { useSelector } from "react-redux";
 import { getFilteredQueries } from "../../../store/queries/selectors";
 
 interface DataType {
@@ -17,6 +17,8 @@ const COLUMNS: TableColumnsType<DataType> = [
     title: "Title",
     key: "title",
     dataIndex: "title",
+    sorter: (a, b) => a.title.localeCompare(b.title),
+    sortDirections: ["ascend", "descend"],
   },
   {
     title: "Count",
@@ -29,11 +31,11 @@ const COLUMNS: TableColumnsType<DataType> = [
   },
 ];
 
-interface QueryGroupTable {
+interface QueryGroup {
   groupId: GroupId;
 }
 
-const QueryGroupTable: FC<QueryGroupTable> = ({ groupId }) => {
+const QueryGroup: FC<QueryGroup> = ({ groupId }) => {
   const filteredQueries = useSelector((state) =>
     getFilteredQueries(state, groupId)
   );
@@ -60,4 +62,4 @@ const QueryGroupTable: FC<QueryGroupTable> = ({ groupId }) => {
   );
 };
 
-export { QueryGroupTable };
+export { QueryGroup };

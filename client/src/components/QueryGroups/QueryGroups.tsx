@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { Collapse, CollapseProps } from "antd";
 
 import { getQueryGroups, getSorting } from "../../store/queries/selectors";
-import { QueryGroupTable } from "./QueryGroupTable/QueryGroupTable";
+import { QueryGroup } from "./QueryGroup/QueryGroup";
 import { QueryGroupTitle } from "./QueryGroupTitle/QueryGroupTitle";
 
 const QueryGroups: FC = () => {
@@ -18,7 +18,7 @@ const QueryGroups: FC = () => {
       return {
         key: groupId,
         label: <QueryGroupTitle groupId={groupId} title={title} />,
-        children: <QueryGroupTable groupId={groupId} />,
+        children: <QueryGroup groupId={groupId} />,
       };
     });
 

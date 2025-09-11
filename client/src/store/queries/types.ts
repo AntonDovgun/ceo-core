@@ -14,16 +14,23 @@ interface QueryGroup {
     queries: Query[];
 }
 
+interface GroupFilters {
+    contains: string[];
+    partial: string[];
+    count: string | null;
+}
+
 interface QueriesState {
     queryGroups: Record<GroupId, QueryGroup>;
-    filters: Record<GroupId, string[]>;
+    filters: Record<GroupId, GroupFilters>;
     sorting: GroupId[];
 }
 
-export {
-    type QueryId,
-    type GroupId,
-    type Query,
-    type QueryGroup,
-    type QueriesState,
+export type {
+    QueryId,
+    GroupId,
+    Query,
+    QueryGroup,
+    QueriesState,
+    GroupFilters,
 }
