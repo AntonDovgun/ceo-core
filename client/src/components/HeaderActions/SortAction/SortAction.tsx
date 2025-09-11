@@ -15,7 +15,7 @@ const SortAction: FC = () => {
         onClick={() => setIsModalOpen(true)}
       />
       <Modal
-        title="Sorting groups"
+        title="Сортировка групп"
         open={isModalOpen}
         onCancel={() => setIsModalOpen(false)}
         footer={null}

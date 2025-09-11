@@ -2,6 +2,7 @@ import { createSelector } from "@reduxjs/toolkit";
 
 import type { RootState } from "../store";
 import type { GroupId, QueriesState } from "./types";
+import { QueryGroupService } from "../../services/QueryGroup/QueryGroupService";
 
 const getState = (rootState: RootState): QueriesState => rootState.queries;
 
@@ -55,72 +56,34 @@ const getGroupFilters = createSelector(
     (filters, groupId) => filters[groupId],
 );
 
-const getFilteredQueries = createSelector(
+const getFilteredQueriesData = createSelector(
     [
         (_, groupId: GroupId) => groupId,
         getQueryGroup,
         getGroupFilters,
     ],
     (_, queryGroup, groupFilters) => {
-        const {
-            contains: containsFilter,
-            partial: partialFilter,
-            count: countFilter
-        } = groupFilters;
-
-
-        const filteredQueriesByContains = queryGroup.queries.filter((query) => {
-            for (let i = 0; i <= containsFilter.length - 1; i++) {
-                const text = containsFilter[i];
-
-                if (query.title.includes(text)) {
-                    return false;
-                }
-            }
-
-            return true;
-        });
-
-        const filteredQueriesByPartial = filteredQueriesByContains.filter((query) => {
-            for (let i = 0; i <= partialFilter.length - 1; i++) {
-                const text = partialFilter[i];
-                const queryTitleArray = query.title.split(' ');
-
-                if (queryTitleArray.includes(text)) {
-                    return false;
-                }
-
-            }
-
-            return true;
-        });
-
-        if (!countFilter) {
-            return filteredQueriesByPartial;
-        }
-
-        const filteredQueriesByCount = filteredQueriesByPartial.filter((query) => {
-            const count = Number(query.count);
-
-            if (count >= Number(countFilter)) {
-                return true;
-            }
-
-            return false;
-        })
-
-        return filteredQueriesByCount
+        return QueryGroupService.getFilteredQueriesData(queryGroup.queries, groupFilters)
     },
 );
 
-
+const getExcludedQueriesData = createSelector(
+    [
+      (_, groupId: GroupId) => groupId,
+        getQueryGroup,
+        getGroupFilters,
+    ],
+    (_, queryGroup, groupFilters) => {
+        return QueryGroupService.getExcludedQueriesData(queryGroup.queries, groupFilters)
+    }
+);
 
 const getFilteredQueriesCount = createSelector(
     [
         (_, groupId: GroupId) => groupId,
-        getFilteredQueries,
+        getFilteredQueriesData,
     ],
-    (_, filteredQueries) => filteredQueries.length
+    (_, filteredQueriesData) => filteredQueriesData.length
 )
 
 export {
@@ -128,7 +91,8 @@ export {
     getGroupFilters,
     getSorting,
     getSortedGroups,
-    getFilteredQueries,
+    getFilteredQueriesData,
+    getExcludedQueriesData,
     getFilteredQueriesCount,
     getQueriesCount
 }
