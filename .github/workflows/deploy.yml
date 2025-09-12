@@ -16,7 +16,7 @@ jobs:
       - name: Install dependencies
         run: |
           cd client
-          nom install
+          npm install
 
       - name: Build Project
         run: |
