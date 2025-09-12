@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Repo for collect ceo core",
   "main": "index.js",
+  "homepage": "https://antondovgun.github.io/ceo-core",
   "scripts": {
     "start": "concurrently \"npm run client:start\" \"npm run server:start\"",
     "client:start": "cd client && npm run dev",
