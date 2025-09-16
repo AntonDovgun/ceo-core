@@ -37,6 +37,8 @@ class QueryGroupService {
         const filteredQueriesByExcluded = queries.filter(({ isExcluded }) => !isExcluded);
 
         const filteredQueriesByContains = filteredQueriesByExcluded.filter((query) => {
+            if (query.ignoreFilters) return true;
+
             for (let i = 0; i <= containsFilter.length - 1; i++) {
                 const text = containsFilter[i];
 
@@ -49,6 +51,8 @@ class QueryGroupService {
         });
 
         const filteredQueriesByPartial = filteredQueriesByContains.filter((query) => {
+            if (query.ignoreFilters) return true;
+
             for (let i = 0; i <= partialFilter.length - 1; i++) {
                 const text = partialFilter[i];
                 const queryTitleArray = query.title.split(' ');
@@ -71,6 +75,8 @@ class QueryGroupService {
         }
 
         const filteredQueriesByCount = filteredQueriesByPartial.filter((query) => {
+            if (query.ignoreFilters) return true;
+
             const count = Number(query.count);
 
             if (count >= Number(countFilter)) {
@@ -104,7 +110,7 @@ class QueryGroupService {
             for (let i = 0; i <= queries.length - 1; i++) {
                 const query = queries[i];
 
-                if (query.title.includes(filteredText)) {
+                if (query.title.includes(filteredText) && !query.ignoreFilters) {
                     children.push({
                         ...query,
                         key: `contains: ${query.queryId}`,
@@ -136,7 +142,7 @@ class QueryGroupService {
 
                 const queryTitleArray = query.title.split(' ');
 
-                if (queryTitleArray.includes(filteredText)) {
+                if (queryTitleArray.includes(filteredText) && !query.ignoreFilters) {
                     children.push({
                         ...query,
                         key: `partial: ${query.queryId}`,
@@ -165,7 +171,7 @@ class QueryGroupService {
             for (let i = 0; i <= queries.length - 1; i++) {
                 const query = queries[i];
 
-                if (Number(query.count) < Number(filteredCount)) {
+                if (Number(query.count) < Number(filteredCount) && !query.ignoreFilters) {
                     children.push({
                         ...query,
                         key: `count: ${query.queryId}`,
@@ -195,7 +201,7 @@ class QueryGroupService {
         for (let i = 0; i <= queries.length - 1; i++) {
             const query = queries[i];
 
-            if (query.isExcluded) {
+            if (query.isExcluded && !query.ignoreFilters) {
                 excludedChildren.push({
                     ...query,
                     key: `excluded - ${query.queryId}`,

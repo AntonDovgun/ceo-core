@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Table, TableColumnsType } from "antd";
+import { Flex, Table, TableColumnsType, Typography } from "antd";
+import { ExclamationCircleOutlined } from "@ant-design/icons";
 
 import type { GroupId, Query } from "../../../../store/queries/types";
 import { getFilteredQueriesData } from "../../../../store/queries/selectors";
@@ -17,6 +18,18 @@ const COLUMNS: TableColumnsType<FilteredDataType> = [
     dataIndex: "title",
     sorter: (a, b) => a.title.localeCompare(b.title),
     sortDirections: ["ascend", "descend"],
+    render: (value, record) => {
+      if (record.ignoreFilters) {
+        return (
+          <Flex gap={10}>
+            <Typography.Text>{value}</Typography.Text>
+            <ExclamationCircleOutlined style={{ color: "red" }} />
+          </Flex>
+        );
+      }
+
+      return value;
+    },
   },
   {
     title: "Количество",
@@ -39,15 +52,16 @@ const FilteredTable: FC<FilteredTableProps> = ({ groupId }) => {
     getFilteredQueriesData(state, groupId)
   );
 
-  const onRow = ({ queryId }: FilteredDataType) => {
+  const onRow = (query: FilteredDataType) => {
     return {
       onClick: () => {
         dispatch(
           updateQuery({
             groupId,
-            queryId,
+            queryId: query.queryId,
             query: {
-              isExcluded: true,
+              ignoreFilters: false,
+              isExcluded: query.ignoreFilters ? false : true,
             },
           })
         );

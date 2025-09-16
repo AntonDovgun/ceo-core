@@ -63,7 +63,7 @@ const ExcludedTable: FC<ExcludedTableProps> = ({ groupId }) => {
           updateQuery({
             groupId,
             queryId: record.queryId,
-            query: { isExcluded: false },
+            query: { isExcluded: false, ignoreFilters: true },
           })
         );
       },
