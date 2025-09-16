@@ -1,17 +1,19 @@
 import { FC, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Flex, Modal, Typography } from "antd";
-import { DeleteFilled } from "@ant-design/icons";
+import { DeleteFilled, DownloadOutlined } from "@ant-design/icons";
 
 import type { GroupId } from "../../../store/queries/types";
 import {
   getFilteredQueriesCount,
+  getFilteredQueriesCSV,
   getQueriesCount,
 } from "../../../store/queries/selectors";
 import {
   changeQueryGroupTitle,
   removeQueryGroup,
 } from "../../../store/queries/slice";
+import { downloadCSV } from "../../../utils/downloadCSV";
 
 import className from "./QueryGroupTitle.module.css";
 
@@ -27,6 +29,10 @@ const QueryGroupTitle: FC<QueryGroupTitle> = ({ title, groupId }) => {
   const queriesCount = useSelector((state) => getQueriesCount(state, groupId));
   const filteredQueriesCount = useSelector((state) =>
     getFilteredQueriesCount(state, groupId)
+  );
+
+  const filteredQueriesCSV = useSelector((state) =>
+    getFilteredQueriesCSV(state, groupId)
   );
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -58,6 +64,11 @@ const QueryGroupTitle: FC<QueryGroupTitle> = ({ title, groupId }) => {
     setIsModalOpen(true);
   };
 
+  const onDownloadSCV = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    downloadCSV(filteredQueriesCSV, title);
+  };
+
   return (
     <>
       <Flex justify="space-between">
@@ -74,11 +85,12 @@ const QueryGroupTitle: FC<QueryGroupTitle> = ({ title, groupId }) => {
             style={{ fontSize: 12 }}
           >{`- ${filteredQueriesCount} / ${queriesCount}`}</Text>
         </Flex>
-        <Flex>
-          <DeleteFilled
-            className={className.deleteIcon}
-            onClick={onDeleteGroup}
+        <Flex gap={10}>
+          <DownloadOutlined
+            className={className.icon}
+            onClick={onDownloadSCV}
           />
+          <DeleteFilled className={className.icon} onClick={onDeleteGroup} />
         </Flex>
       </Flex>
       <Modal

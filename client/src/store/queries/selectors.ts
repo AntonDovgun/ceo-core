@@ -1,4 +1,6 @@
 import { createSelector } from "@reduxjs/toolkit";
+import Papa from 'papaparse';
+import { message } from "antd";
 
 import type { RootState } from "../store";
 import type { GroupId, QueriesState } from "./types";
@@ -67,6 +69,22 @@ const getFilteredQueriesData = createSelector(
     },
 );
 
+const getFilteredQueriesCSV = createSelector(
+    [
+        (_, groupId: GroupId) => groupId,
+        getFilteredQueriesData,
+    ],
+    (_, filteredQueriesData) => {
+        try {
+            const csv = Papa.unparse(filteredQueriesData, { columns: ['title', 'count'], delimiter: ";", header: false});
+            return csv;
+        } catch {
+            message.error('Failed to convert JSON to CSV');
+            return '';
+        }
+    }
+);
+
 const getExcludedQueriesData = createSelector(
     [
       (_, groupId: GroupId) => groupId,
@@ -94,5 +112,6 @@ export {
     getFilteredQueriesData,
     getExcludedQueriesData,
     getFilteredQueriesCount,
-    getQueriesCount
+    getQueriesCount,
+    getFilteredQueriesCSV
 }
