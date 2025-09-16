@@ -34,7 +34,11 @@ class QueryGroupService {
             count: countFilter
         } = groupFilters;
 
-        const filteredQueriesByContains = queries.filter((query) => {
+        const filteredQueriesByExcluded = queries.filter(({ isExcluded }) => !isExcluded);
+
+        const filteredQueriesByContains = filteredQueriesByExcluded.filter((query) => {
+            if (query.ignoreFilters) return true;
+
             for (let i = 0; i <= containsFilter.length - 1; i++) {
                 const text = containsFilter[i];
 
@@ -47,6 +51,8 @@ class QueryGroupService {
         });
 
         const filteredQueriesByPartial = filteredQueriesByContains.filter((query) => {
+            if (query.ignoreFilters) return true;
+
             for (let i = 0; i <= partialFilter.length - 1; i++) {
                 const text = partialFilter[i];
                 const queryTitleArray = query.title.split(' ');
@@ -60,15 +66,17 @@ class QueryGroupService {
             return true;
         });
 
+
         if (!countFilter) {
-            return filteredQueriesByPartial.map(({queryId, title, count}) => ({
-                key: queryId,
-                title,
-                count
+            return filteredQueriesByPartial.map((query) => ({
+                ...query,
+                key: query.queryId,
             }));
         }
 
         const filteredQueriesByCount = filteredQueriesByPartial.filter((query) => {
+            if (query.ignoreFilters) return true;
+
             const count = Number(query.count);
 
             if (count >= Number(countFilter)) {
@@ -78,10 +86,9 @@ class QueryGroupService {
             return false;
         })
 
-        return filteredQueriesByCount.map(({queryId, title, count}) => ({
-            key: queryId,
-            title,
-            count
+        return filteredQueriesByCount.map((query) => ({
+            ...query,
+            key: query.queryId,
         }))
     }
 
@@ -94,30 +101,29 @@ class QueryGroupService {
 
         const data: ExcludedDataType[] = [];
 
+        // Filter by "contains"
         for (let i = 0; i <= contains.length - 1; i++) {
             const filteredText = contains[i];
             let total = 0;
             const children: ExcludedDataType[] = [];
 
             for (let i = 0; i <= queries.length - 1; i++) {
-                const {
-                    queryId,
-                    title,
-                    count
-                } = queries[i];
+                const query = queries[i];
 
-                if (title.includes(filteredText)) {
+                if (query.title.includes(filteredText) && !query.ignoreFilters) {
                     children.push({
-                        key: `contains: ${queryId}`,
-                        title,
-                        count
+                        ...query,
+                        key: `contains: ${query.queryId}`,
                     });
                     total++;
                 }
             }
 
+            const key = `contains: ${filteredText}`;
+
             data.push({
-                key: `contains: ${filteredText}`,
+                key,
+                queryId: key,
                 title: filteredText,
                 count: total,
                 color: 'red',
@@ -125,32 +131,31 @@ class QueryGroupService {
             })
         }
 
+        // Filter by "partial"
         for (let i = 0; i <= partial.length - 1; i++) {
             const filteredText = partial[i];
             let total = 0;
             const children: ExcludedDataType[] = [];
 
             for (let i = 0; i <= queries.length - 1; i++) {
-                const {
-                    queryId,
-                    title,
-                    count
-                } = queries[i];
+                const query = queries[i];
 
-                const queryTitleArray = title.split(' ');
+                const queryTitleArray = query.title.split(' ');
 
-                if (queryTitleArray.includes(filteredText)) {
+                if (queryTitleArray.includes(filteredText) && !query.ignoreFilters) {
                     children.push({
-                        key: `partial: ${queryId}`,
-                        title,
-                        count
+                        ...query,
+                        key: `partial: ${query.queryId}`,
                     });
                     total++;
                 }
             }
 
+            const key = `partial: ${filteredText}`;
+
             data.push({
-                key: `partial: ${filteredText}`,
+                key,
+                queryId: key,
                 title: filteredText,
                 count: total,
                 color: 'orange',
@@ -158,33 +163,63 @@ class QueryGroupService {
             })
         }
 
+        // Filter by "count"
         if (filteredCount) {
             let total = 0;
             const children: ExcludedDataType[] = [];
 
             for (let i = 0; i <= queries.length - 1; i++) {
-                const {
-                    queryId,
-                    title,
-                    count
-                } = queries[i];
+                const query = queries[i];
 
-                if (Number(count) < Number(filteredCount)) {
+                if (Number(query.count) < Number(filteredCount) && !query.ignoreFilters) {
                     children.push({
-                        key: `count: ${queryId}`,
-                        title,
-                        count
+                        ...query,
+                        key: `count: ${query.queryId}`,
                     });
                     total++;
                 }
             }
 
-            data.push({
-                key: `count - ${filteredCount}`,
+            const key = "filter by count";
+
+            if (total) {
+               data.push({
+                key,
+                queryId: key,
                 title: 'Фильтр по количеству',
                 count: total,
                 color: 'green',
                 children
+            })
+            }
+        }
+
+        // Filter by "custom"
+        let excludedCount = 0;
+        const excludedChildren: ExcludedDataType[] = [];
+
+        for (let i = 0; i <= queries.length - 1; i++) {
+            const query = queries[i];
+
+            if (query.isExcluded && !query.ignoreFilters) {
+                excludedChildren.push({
+                    ...query,
+                    key: `excluded - ${query.queryId}`,
+                });
+                excludedCount++;
+            }
+        }
+
+        const key = `filter by excluded`;
+
+        if (excludedCount) {
+           data.push({
+                key,
+                queryId: key,
+                title: 'Исключенные',
+                count: excludedCount,
+                color: '#3765b0',
+                children: excludedChildren
             })
         }
 

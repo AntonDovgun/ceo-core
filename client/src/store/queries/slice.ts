@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { initialState } from "./initialState";
-import type { GroupFilters, GroupId, QueryGroup } from "./types";
+import type { GroupFilters, GroupId, Query, QueryGroup, QueryId } from "./types";
 import { DEFAULT_FILTERS } from "./constants";
 
 const queriesSlice = createSlice({
@@ -35,7 +35,21 @@ const queriesSlice = createSlice({
         },
         setSorting: (state, { payload }: PayloadAction<GroupId[]>) => {
             state.sorting = payload;
-        }
+        },
+        updateQuery: (state, { payload }: PayloadAction<{
+            groupId: GroupId;
+            queryId: QueryId;
+            query: Partial<Query>;
+        }>) => {
+            const { queries } = state.queryGroups[payload.groupId];
+
+            const queryIndex = queries.findIndex(({ queryId }) => queryId === payload.queryId);
+
+            queries[queryIndex] = {
+                ...queries[queryIndex],
+                ...payload.query
+            };
+        },
     }
 })
 
@@ -44,7 +58,8 @@ export const {
     removeQueryGroup,
     setFilters,
     changeQueryGroupTitle,
-    setSorting
+    setSorting,
+    updateQuery,
 } = queriesSlice.actions;
 
 export const queriesReducer = queriesSlice.reducer;
