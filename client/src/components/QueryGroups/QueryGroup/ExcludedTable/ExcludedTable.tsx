@@ -4,7 +4,7 @@ import { Table, TableColumnsType, Typography } from "antd";
 
 import { GroupId, Query } from "../../../../store/queries/types";
 import { getExcludedQueriesData } from "../../../../store/queries/selectors";
-import { includedQuery } from "../../../../store/queries/slice";
+import { updateQuery } from "../../../../store/queries/slice";
 
 interface ExcludedDataType extends Query {
   key: React.Key;
@@ -59,7 +59,13 @@ const ExcludedTable: FC<ExcludedTableProps> = ({ groupId }) => {
     return {
       onClick: (event: React.MouseEvent) => {
         event.stopPropagation();
-        dispatch(includedQuery({ groupId, queryId: record.queryId }));
+        dispatch(
+          updateQuery({
+            groupId,
+            queryId: record.queryId,
+            query: { isExcluded: false },
+          })
+        );
       },
       style: {
         cursor: "pointer",

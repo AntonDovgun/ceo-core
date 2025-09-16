@@ -4,7 +4,7 @@ import { Table, TableColumnsType } from "antd";
 
 import type { GroupId, Query } from "../../../../store/queries/types";
 import { getFilteredQueriesData } from "../../../../store/queries/selectors";
-import { excludedQuery } from "../../../../store/queries/slice";
+import { updateQuery } from "../../../../store/queries/slice";
 
 interface FilteredDataType extends Query {
   key: React.Key;
@@ -43,9 +43,12 @@ const FilteredTable: FC<FilteredTableProps> = ({ groupId }) => {
     return {
       onClick: () => {
         dispatch(
-          excludedQuery({
+          updateQuery({
             groupId,
             queryId,
+            query: {
+              isExcluded: true,
+            },
           })
         );
       },
