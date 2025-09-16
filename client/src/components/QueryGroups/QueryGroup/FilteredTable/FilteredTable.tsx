@@ -1,14 +1,13 @@
 import { FC } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Table, TableColumnsType } from "antd";
 
-import type { GroupId } from "../../../../store/queries/types";
+import type { GroupId, Query } from "../../../../store/queries/types";
 import { getFilteredQueriesData } from "../../../../store/queries/selectors";
+import { excludedQuery } from "../../../../store/queries/slice";
 
-interface FilteredDataType {
+interface FilteredDataType extends Query {
   key: React.Key;
-  title: string;
-  count: number;
 }
 
 const COLUMNS: TableColumnsType<FilteredDataType> = [
@@ -35,14 +34,32 @@ interface FilteredTableProps {
 }
 
 const FilteredTable: FC<FilteredTableProps> = ({ groupId }) => {
+  const dispatch = useDispatch();
   const filteredQueriesData = useSelector((state) =>
     getFilteredQueriesData(state, groupId)
   );
+
+  const onRow = ({ queryId }: FilteredDataType) => {
+    return {
+      onClick: () => {
+        dispatch(
+          excludedQuery({
+            groupId,
+            queryId,
+          })
+        );
+      },
+      style: {
+        cursor: "pointer",
+      },
+    };
+  };
 
   return (
     <Table
       columns={COLUMNS}
       dataSource={filteredQueriesData}
+      onRow={onRow}
       size="small"
       pagination={false}
       scroll={{ y: 500 }}

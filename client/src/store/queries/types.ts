@@ -4,6 +4,7 @@ interface Query {
     queryId: QueryId;
     title: string;
     count: number;
+    isExcluded?: boolean;
 }
 
 type GroupId = string;

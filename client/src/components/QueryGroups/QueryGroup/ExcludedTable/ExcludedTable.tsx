@@ -1,14 +1,13 @@
 import { FC } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Table, TableColumnsType, Typography } from "antd";
 
-import { GroupId } from "../../../../store/queries/types";
+import { GroupId, Query } from "../../../../store/queries/types";
 import { getExcludedQueriesData } from "../../../../store/queries/selectors";
+import { includedQuery } from "../../../../store/queries/slice";
 
-interface ExcludedDataType {
+interface ExcludedDataType extends Query {
   key: React.Key;
-  title: string;
-  count: number;
   color?: string;
   children?: ExcludedDataType[];
 }
@@ -47,14 +46,32 @@ interface ExcludedTableProps {
 }
 
 const ExcludedTable: FC<ExcludedTableProps> = ({ groupId }) => {
+  const dispatch = useDispatch();
   const excludedQueriesData = useSelector((state) =>
     getExcludedQueriesData(state, groupId)
   );
+
+  const onRow = (record: ExcludedDataType) => {
+    if (record.children) {
+      return {};
+    }
+
+    return {
+      onClick: (event: React.MouseEvent) => {
+        event.stopPropagation();
+        dispatch(includedQuery({ groupId, queryId: record.queryId }));
+      },
+      style: {
+        cursor: "pointer",
+      },
+    };
+  };
 
   return (
     <Table
       columns={COLUMNS}
       dataSource={excludedQueriesData}
+      onRow={onRow}
       size="small"
       pagination={false}
       scroll={{ y: 500 }}
