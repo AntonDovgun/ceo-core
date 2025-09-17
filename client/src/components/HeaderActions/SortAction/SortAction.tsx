@@ -19,6 +19,7 @@ const SortAction: FC = () => {
         open={isModalOpen}
         onCancel={() => setIsModalOpen(false)}
         footer={null}
+        destroyOnHidden
       >
         <SortableList />
       </Modal>

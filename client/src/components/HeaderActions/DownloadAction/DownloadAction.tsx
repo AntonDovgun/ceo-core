@@ -1,9 +1,12 @@
-import { FC, useState } from "react";
+import { FC, useRef, useState } from "react";
 import { Button, Modal } from "antd";
 import { DownloadOutlined } from "@ant-design/icons";
 
+import { DownloadList } from "./DownloadList";
+
 const DownloadAction: FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const downloadListRef = useRef(null);
 
   return (
     <>
@@ -16,8 +19,10 @@ const DownloadAction: FC = () => {
         title="Экспортировать"
         open={isModalOpen}
         onCancel={() => setIsModalOpen(false)}
+        onOk={() => console.log(downloadListRef.current)}
+        destroyOnHidden
       >
-        <div>Download</div>
+        <DownloadList ref={downloadListRef} />
       </Modal>
     </>
   );

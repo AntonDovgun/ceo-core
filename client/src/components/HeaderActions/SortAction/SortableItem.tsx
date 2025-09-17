@@ -1,21 +1,23 @@
 import { FC } from "react";
 import { useSelector } from "react-redux";
+import { Typography } from "antd";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
 import type { GroupId } from "../../../store/queries/types";
 import { getFilteredQueriesCount } from "../../../store/queries/selectors";
-import { Typography } from "antd";
 
 interface SortableItemProps {
-  id: GroupId;
+  groupId: GroupId;
   content: string;
 }
 
-const SortableItem: FC<SortableItemProps> = ({ id, content }) => {
-  const { attributes, listeners, setNodeRef, transform } = useSortable({ id });
-  const filteredCount = useSelector((state) =>
-    getFilteredQueriesCount(state, id)
+const SortableItem: FC<SortableItemProps> = ({ groupId, content }) => {
+  const { attributes, listeners, setNodeRef, transform } = useSortable({
+    id: groupId,
+  });
+  const filteredQueriesCount = useSelector((state) =>
+    getFilteredQueriesCount(state, groupId)
   );
 
   const style = {
@@ -29,7 +31,7 @@ const SortableItem: FC<SortableItemProps> = ({ id, content }) => {
       <Typography.Text
         type="secondary"
         style={{ fontSize: 12 }}
-      >{` - ${filteredCount}`}</Typography.Text>
+      >{` - ${filteredQueriesCount}`}</Typography.Text>
     </div>
   );
 };
