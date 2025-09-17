@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { List } from "antd";
+import { Flex, List } from "antd";
 import { closestCenter, DndContext, DragEndEvent } from "@dnd-kit/core";
 import {
   arrayMove,
@@ -33,15 +33,17 @@ const SortableList = () => {
         items={sortedGroups.map((item) => item.id)}
         strategy={verticalListSortingStrategy}
       >
-        <List
-          bordered
-          dataSource={sortedGroups}
-          renderItem={(item) => (
-            <List.Item>
-              <SortableItem id={item.id} content={item.content} />
-            </List.Item>
-          )}
-        />
+        <Flex vertical style={{ padding: "10px 0" }}>
+          <List
+            bordered
+            dataSource={sortedGroups}
+            renderItem={(item) => (
+              <List.Item>
+                <SortableItem groupId={item.id} content={item.content} />
+              </List.Item>
+            )}
+          />
+        </Flex>
       </SortableContext>
     </DndContext>
   );
