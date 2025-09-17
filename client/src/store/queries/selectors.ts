@@ -85,6 +85,32 @@ const getFilteredQueriesCSV = createSelector(
     }
 );
 
+const getGroupedFilteredQueriesCSV = createSelector(
+    getQueryGroups,
+    getFilters,
+    (queryGroup, filters) => {
+        const groupedQueriesCSV: Record<GroupId, string> = {};
+
+        for (const groupId in queryGroup) {
+            const group = queryGroup[groupId];
+            const groupFilters = filters[groupId];
+
+            const filteredQueriesData = QueryGroupService.getFilteredQueriesData(group.queries, groupFilters);
+
+            try {
+                const csv = Papa.unparse(filteredQueriesData, { columns: ['title', 'count'], delimiter: ';', header: false });
+
+                groupedQueriesCSV[groupId] = `${group.title} - ${filteredQueriesData.length}; \r\n${csv}`;
+            } catch {
+                message.error(`Failed to convert ${group.title} to CSV`);
+            }
+
+        }
+
+        return groupedQueriesCSV;
+    }
+)
+
 const getExcludedQueriesData = createSelector(
     [
       (_, groupId: GroupId) => groupId,
@@ -113,5 +139,6 @@ export {
     getExcludedQueriesData,
     getFilteredQueriesCount,
     getQueriesCount,
-    getFilteredQueriesCSV
+    getFilteredQueriesCSV,
+    getGroupedFilteredQueriesCSV
 }
