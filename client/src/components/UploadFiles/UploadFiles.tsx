@@ -21,9 +21,9 @@ const UploadFiles: FC = () => {
       const parsedData = Papa.parse<TopPopularQueryCSVResponse>(text);
 
       if (parsedData.errors.length === 0) {
-        message.success(`${file.name} file uploaded successfully`);
+        message.success(`${file.name} файл успешно загружен`);
       } else {
-        throw new Error(`Cannot parse ${file.name} file`);
+        throw new Error(`Не могу распарсить ${file.name} файл`);
       }
 
       const queryGroup = QueryGroupService.fromSCVResponse(parsedData.data);
@@ -32,8 +32,8 @@ const UploadFiles: FC = () => {
     } catch (error) {
       const errorMessage = (error as Error).message;
 
-      message.error(`${file.name} file upload failed`);
-      console.error(`Upload and parse file: ${errorMessage}`);
+      message.error(`Ошибка загрузки ${file.name} файла`);
+      console.error(`Ошибка загрузки и парсинга: ${errorMessage}`);
     }
 
     return false;
@@ -41,11 +41,11 @@ const UploadFiles: FC = () => {
 
   const onChangeHandler: OnChangeHandler = (info) => {
     if (info.file.status === "done") {
-      message.success(`${info.file.name} file uploaded successfully`);
+      message.success(`${info.file.name} файл успешно загружен`);
     }
 
     if (info.file.status === "error") {
-      message.error(`${info.file.name} file upload failed`);
+      message.error(`Ошибка загрузки ${info.file.name} файла`);
     }
   };
 
@@ -57,7 +57,7 @@ const UploadFiles: FC = () => {
       accept=".csv"
       showUploadList={false}
     >
-      <Button icon={<UploadOutlined />}>Загрузить</Button>
+      <Button icon={<UploadOutlined />}>Загрузить CSV</Button>
     </Upload>
   );
 };

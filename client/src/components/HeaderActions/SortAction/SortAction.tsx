@@ -1,6 +1,6 @@
 import { FC, useState } from "react";
 import { SortAscendingOutlined } from "@ant-design/icons";
-import { Button, Modal } from "antd";
+import { Button, Modal, Tooltip } from "antd";
 
 import { SortableList } from "./SortableList";
 
@@ -9,11 +9,13 @@ const SortAction: FC = () => {
 
   return (
     <>
-      <Button
-        icon={<SortAscendingOutlined />}
-        type="text"
-        onClick={() => setIsModalOpen(true)}
-      />
+      <Tooltip title="Сортировка">
+        <Button
+          icon={<SortAscendingOutlined />}
+          type="text"
+          onClick={() => setIsModalOpen(true)}
+        />
+      </Tooltip>
       <Modal
         title="Сортировка групп"
         open={isModalOpen}
