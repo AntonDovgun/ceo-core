@@ -1,6 +1,6 @@
 import { FC, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { Button, message, Modal } from "antd";
+import { Button, message, Modal, Tooltip } from "antd";
 import { DownloadOutlined } from "@ant-design/icons";
 
 import { DownloadList } from "./DownloadList";
@@ -30,11 +30,13 @@ const DownloadAction: FC = () => {
 
   return (
     <>
-      <Button
-        icon={<DownloadOutlined />}
-        type="text"
-        onClick={() => setIsModalOpen(true)}
-      />
+      <Tooltip title="Скачать CSV">
+        <Button
+          icon={<DownloadOutlined />}
+          type="text"
+          onClick={() => setIsModalOpen(true)}
+        />
+      </Tooltip>
       <Modal
         title="Экспортировать"
         open={isModalOpen}
